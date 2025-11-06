@@ -1,0 +1,20 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: eks-acg
+  region: us-east-1
+  version: "1.29"
+
+vpc:
+  cidr: 10.0.0.0/16
+  nat:
+    gateway: HighlyAvailable
+
+availabilityZones: ["us-east-1a", "us-east-1b", "us-east-1c"]
+
+fargateProfiles:
+  - name: fargate-profile
+    selectors:
+      - namespace: default
+      - namespace: kube-system
