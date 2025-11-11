@@ -1,14 +1,13 @@
-# nginx-deployment.yaml
 apiVersion: v1
 kind: Namespace
 metadata:
-  name webapp
+  name: webapp
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name nginx
+  name: nginx
   namespace: webapp
 spec:
   replicas: 1
