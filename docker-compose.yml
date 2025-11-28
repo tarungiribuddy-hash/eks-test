@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  immich-db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: immich
+      POSTGRES_PASSWORD: immich_password
+      POSTGRES_DB: immich_db
+    volumes:
+      - immich-db-data:/var/lib/postgresql/data
+
+  immich-server:
+    build: .
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=immich-db
+      - DB_USER=immich
+      - DB_PASSWORD=immich_password
+      - DB_NAME=immich_db
+      # S3 Configuration
+      - AWS_ACCESS_KEY_ID=AKIA4KYWVEQNVDJ52TVO
+      - AWS_SECRET_ACCESS_KEY=IH5svZlXwbaNCn2oZuVbFU0jwQcCMzfhEOych1ra
+      - AWS_REGION=us-east-1  # Update this with your AWS region
+      - S3_BUCKET=immichi-s3
+      - STORAGE_PROVIDER=s3
+      - S3_ENDPOINT=https://s3.amazonaws.com
+      - S3_USE_HTTPS=true
+    ports:
+      - "3000:3000"
+    depends_on:
+      - immich-db
+
+  immich-client:
+    image: immich/immich-client
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - immich-server
+
+volumes:
+  immich-db-data:
